@@ -31,7 +31,7 @@ import java.util.Set;
  * Function:
  *
  * @author crossoverJie
- *         Date: 22/05/2018 14:46
+ * Date: 22/05/2018 14:46
  * @since JDK 1.8
  */
 @Controller
@@ -46,7 +46,7 @@ public class RouteController {
     private AccountService accountService;
 
     @Autowired
-    private UserInfoCacheService userInfoCacheService ;
+    private UserInfoCacheService userInfoCacheService;
 
     @ApiOperation("群聊 API")
     @RequestMapping(value = "groupRoute", method = RequestMethod.POST)
@@ -61,18 +61,18 @@ public class RouteController {
         for (Map.Entry<Long, CIMServerResVO> cimServerResVOEntry : serverResVOMap.entrySet()) {
             Long userId = cimServerResVOEntry.getKey();
             CIMServerResVO value = cimServerResVOEntry.getValue();
-            if (userId.equals(groupReqVO.getUserId())){
+            if (userId.equals(groupReqVO.getUserId())) {
                 //过滤掉自己
                 CIMUserInfo cimUserInfo = userInfoCacheService.loadUserInfoByUserId(groupReqVO.getUserId());
-                LOGGER.warn("过滤掉了发送者 userId={}",cimUserInfo.toString());
+                LOGGER.warn("过滤掉了发送者 userId={}", cimUserInfo.toString());
                 continue;
             }
 
             //推送消息
-            String url = "http://" + value.getIp() + ":" + value.getHttpPort() + "/sendMsg" ;
-            ChatReqVO chatVO = new ChatReqVO(userId,groupReqVO.getMsg()) ;
+            String url = "http://" + value.getIp() + ":" + value.getHttpPort() + "/sendMsg";
+            ChatReqVO chatVO = new ChatReqVO(userId, groupReqVO.getMsg());
 
-            accountService.pushMsg(url,groupReqVO.getUserId(),chatVO);
+            accountService.pushMsg(url, groupReqVO.getUserId(), chatVO);
 
         }
 
@@ -99,16 +99,16 @@ public class RouteController {
             //获取接收消息用户的路由信息
             CIMServerResVO cimServerResVO = accountService.loadRouteRelatedByUserId(p2pRequest.getReceiveUserId());
             //推送消息
-            String url = "http://" + cimServerResVO.getIp() + ":" + cimServerResVO.getHttpPort() + "/sendMsg" ;
+            String url = "http://" + cimServerResVO.getIp() + ":" + cimServerResVO.getHttpPort() + "/sendMsg";
 
             //p2pRequest.getReceiveUserId()==>消息接收者的 userID
-            ChatReqVO chatVO = new ChatReqVO(p2pRequest.getReceiveUserId(),p2pRequest.getMsg()) ;
-            accountService.pushMsg(url,p2pRequest.getUserId(),chatVO);
+            ChatReqVO chatVO = new ChatReqVO(p2pRequest.getReceiveUserId(), p2pRequest.getMsg());
+            accountService.pushMsg(url, p2pRequest.getUserId(), chatVO);
 
             res.setCode(StatusEnum.SUCCESS.getCode());
             res.setMessage(StatusEnum.SUCCESS.getMessage());
 
-        }catch (CIMException e){
+        } catch (CIMException e) {
             res.setCode(e.getErrorCode());
             res.setMessage(e.getErrorMessage());
         }
@@ -148,10 +148,10 @@ public class RouteController {
         if (login) {
             String server = serverCache.selectServer();
             String[] serverInfo = server.split(":");
-            CIMServerResVO vo = new CIMServerResVO(serverInfo[0], Integer.parseInt(serverInfo[1]),Integer.parseInt(serverInfo[2]));
+            CIMServerResVO vo = new CIMServerResVO(serverInfo[0], Integer.parseInt(serverInfo[1]), Integer.parseInt(serverInfo[2]));
 
             //保存路由信息
-            accountService.saveRouteInfo(loginReqVO,server);
+            accountService.saveRouteInfo(loginReqVO, server);
 
             res.setDataBody(vo);
             res.setCode(StatusEnum.SUCCESS.getCode());
@@ -197,14 +197,11 @@ public class RouteController {
         BaseResponse<Set<CIMUserInfo>> res = new BaseResponse();
 
         Set<CIMUserInfo> cimUserInfos = userInfoCacheService.onlineUser();
-        res.setDataBody(cimUserInfos) ;
+        res.setDataBody(cimUserInfos);
         res.setCode(StatusEnum.SUCCESS.getCode());
         res.setMessage(StatusEnum.SUCCESS.getMessage());
         return res;
     }
-
-
-
 
 
 }

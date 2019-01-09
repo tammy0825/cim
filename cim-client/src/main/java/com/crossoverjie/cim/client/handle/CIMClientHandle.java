@@ -17,7 +17,7 @@ import java.util.concurrent.ThreadPoolExecutor;
  * Function:
  *
  * @author crossoverJie
- *         Date: 16/02/2018 18:09
+ * Date: 16/02/2018 18:09
  * @since JDK 1.8
  */
 @ChannelHandler.Sharable
@@ -25,21 +25,21 @@ public class CIMClientHandle extends SimpleChannelInboundHandler<CIMResponseProt
 
     private final static Logger LOGGER = LoggerFactory.getLogger(CIMClientHandle.class);
 
-    private MsgHandleCaller caller ;
+    private MsgHandleCaller caller;
 
-    private ThreadPoolExecutor threadPoolExecutor ;
+    private ThreadPoolExecutor threadPoolExecutor;
 
 
     @Override
     public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
 
-        if (evt instanceof IdleStateEvent){
-            IdleStateEvent idleStateEvent = (IdleStateEvent) evt ;
+        if (evt instanceof IdleStateEvent) {
+            IdleStateEvent idleStateEvent = (IdleStateEvent) evt;
 
-            if (idleStateEvent.state() == IdleState.WRITER_IDLE){
+            if (idleStateEvent.state() == IdleState.WRITER_IDLE) {
                 CIMRequestProto.CIMReqProtocol heartBeat = SpringBeanFactory.getBean("heartBeat",
                         CIMRequestProto.CIMReqProtocol.class);
-                ctx.writeAndFlush(heartBeat) ;
+                ctx.writeAndFlush(heartBeat);
             }
 
 
@@ -69,12 +69,13 @@ public class CIMClientHandle extends SimpleChannelInboundHandler<CIMResponseProt
 
     /**
      * 回调消息
+     *
      * @param msg
      */
     private void callBackMsg(String msg) {
-        threadPoolExecutor = SpringBeanFactory.getBean("callBackThreadPool",ThreadPoolExecutor.class) ;
+        threadPoolExecutor = SpringBeanFactory.getBean("callBackThreadPool", ThreadPoolExecutor.class);
         threadPoolExecutor.execute(() -> {
-            caller = SpringBeanFactory.getBean(MsgHandleCaller.class) ;
+            caller = SpringBeanFactory.getBean(MsgHandleCaller.class);
             caller.getMsgHandleListener().handle(msg);
         });
 
@@ -83,7 +84,7 @@ public class CIMClientHandle extends SimpleChannelInboundHandler<CIMResponseProt
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
         //异常时断开连接
-        cause.printStackTrace() ;
-        ctx.close() ;
+        cause.printStackTrace();
+        ctx.close();
     }
 }

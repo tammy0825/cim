@@ -13,23 +13,23 @@ import org.springframework.context.annotation.Configuration;
  * Function:
  *
  * @author crossoverJie
- *         Date: 2018/8/24 01:28
+ * Date: 2018/8/24 01:28
  * @since JDK 1.8
  */
 @Configuration
 public class AppConfig {
 
     @Autowired
-    private AppConfiguration appConfiguration ;
+    private AppConfiguration appConfiguration;
 
     @Bean
-    public ZkClient buildZKClient(){
+    public ZkClient buildZKClient() {
         return new ZkClient(appConfiguration.getZkAddr(), 5000);
     }
 
 
     @Bean
-    public LoadingCache<String,String> buildCache(){
+    public LoadingCache<String, String> buildCache() {
         return CacheBuilder.newBuilder()
                 .build(new CacheLoader<String, String>() {
                     @Override

@@ -23,23 +23,23 @@ import java.util.concurrent.TimeUnit;
  * Function:
  *
  * @author crossoverJie
- *         Date: 2018/12/26 11:15
+ * Date: 2018/12/26 11:15
  * @since JDK 1.8
  */
 @Service
 public class MsgHandler implements MsgHandle {
     private final static Logger LOGGER = LoggerFactory.getLogger(MsgHandler.class);
     @Autowired
-    private RouteRequest routeRequest ;
+    private RouteRequest routeRequest;
 
     @Autowired
     private AppConfiguration configuration;
 
     @Autowired
-    private ThreadPoolExecutor executor ;
+    private ThreadPoolExecutor executor;
 
     @Autowired
-    private CIMClient cimClient ;
+    private CIMClient cimClient;
 
     @Override
     public void sendMsg(String msg) {
@@ -53,7 +53,7 @@ public class MsgHandler implements MsgHandle {
             try {
                 p2pChat(p2PReqVO);
             } catch (Exception e) {
-                LOGGER.error("Exception",e);
+                LOGGER.error("Exception", e);
             }
 
         } else {
@@ -62,7 +62,7 @@ public class MsgHandler implements MsgHandle {
             try {
                 groupChat(groupReqVO);
             } catch (Exception e) {
-                LOGGER.error("Exception",e);
+                LOGGER.error("Exception", e);
             }
         }
     }
@@ -81,7 +81,7 @@ public class MsgHandler implements MsgHandle {
 
     @Override
     public boolean checkMsg(String msg) {
-        if (StringUtil.isEmpty(msg)){
+        if (StringUtil.isEmpty(msg)) {
             LOGGER.warn("不能发送空消息！");
             return true;
         }
@@ -91,27 +91,27 @@ public class MsgHandler implements MsgHandle {
     @Override
     public boolean innerCommand(String msg) {
 
-        if (msg.startsWith(":")){
+        if (msg.startsWith(":")) {
             Map<String, String> allStatusCode = SystemCommandEnumType.getAllStatusCode();
 
-            if (SystemCommandEnumType.QUIT.getCommandType().trim().equals(msg)){
+            if (SystemCommandEnumType.QUIT.getCommandType().trim().equals(msg)) {
                 //关闭系统
                 shutdown();
-            } else if (SystemCommandEnumType.ALL.getCommandType().trim().equals(msg)){
+            } else if (SystemCommandEnumType.ALL.getCommandType().trim().equals(msg)) {
                 printAllCommand(allStatusCode);
 
-            } else if (SystemCommandEnumType.ONLINE_USER.getCommandType().toLowerCase().trim().equals(msg.toLowerCase())){
+            } else if (SystemCommandEnumType.ONLINE_USER.getCommandType().toLowerCase().trim().equals(msg.toLowerCase())) {
                 //打印在线用户
                 printOnlineUsers();
 
-            }else {
+            } else {
                 printAllCommand(allStatusCode);
             }
 
-            return true ;
+            return true;
 
-        }else {
-            return false ;
+        } else {
+            return false;
         }
 
 
@@ -126,12 +126,12 @@ public class MsgHandler implements MsgHandle {
 
             LOGGER.info("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
             for (OnlineUsersResVO.DataBodyBean onlineUser : onlineUsers) {
-                LOGGER.info("userId={}=====userName={}",onlineUser.getUserId(),onlineUser.getUserName());
+                LOGGER.info("userId={}=====userName={}", onlineUser.getUserId(), onlineUser.getUserName());
             }
             LOGGER.info("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
 
         } catch (Exception e) {
-            LOGGER.error("Exception" ,e);
+            LOGGER.error("Exception", e);
         }
     }
 
@@ -147,7 +147,7 @@ public class MsgHandler implements MsgHandle {
             }
             cimClient.close();
         } catch (InterruptedException e) {
-            LOGGER.error("InterruptedException",e);
+            LOGGER.error("InterruptedException", e);
         }
         System.exit(0);
     }

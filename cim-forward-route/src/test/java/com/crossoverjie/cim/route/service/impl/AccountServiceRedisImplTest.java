@@ -21,12 +21,12 @@ public class AccountServiceRedisImplTest {
     private final static Logger LOGGER = LoggerFactory.getLogger(AccountServiceRedisImplTest.class);
 
     @Autowired
-    private AccountService accountService ;
+    private AccountService accountService;
 
     @Test
     public void loadRouteRelated() throws Exception {
         Map<Long, CIMServerResVO> longCIMServerResVOMap = accountService.loadRouteRelated();
-        LOGGER.info("longCIMServerResVOMap={}" , JSON.toJSONString(longCIMServerResVOMap));
+        LOGGER.info("longCIMServerResVOMap={}", JSON.toJSONString(longCIMServerResVOMap));
     }
 
 }

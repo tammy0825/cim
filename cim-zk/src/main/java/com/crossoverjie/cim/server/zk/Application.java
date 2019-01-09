@@ -1,7 +1,7 @@
 package com.crossoverjie.cim.server.zk;
 
-import com.crossoverjie.cim.server.zk.util.AppConfiguration;
 import com.crossoverjie.cim.server.zk.thread.RegistryZK;
+import com.crossoverjie.cim.server.zk.util.AppConfiguration;
 import com.crossoverjie.cim.server.zk.util.ZKit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,28 +16,26 @@ import java.net.InetAddress;
  * @author crossoverJie
  */
 @SpringBootApplication
-public class Application implements CommandLineRunner{
+public class Application implements CommandLineRunner {
 
-	private final static Logger LOGGER = LoggerFactory.getLogger(Application.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(Application.class);
+    @Autowired
+    private static ZKit zkUtil;
+    @Autowired
+    private AppConfiguration appConfiguration;
 
-	@Autowired
-	private AppConfiguration appConfiguration ;
-
-	@Autowired
-	private static ZKit zkUtil ;
-
-	public static void main(String[] args) {
+    public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
-		LOGGER.info("启动应用成功");
+        LOGGER.info("启动应用成功");
 
-	}
+    }
 
-	@Override
-	public void run(String... args) throws Exception {
-		//获得本机IP
-		String addr = InetAddress.getLocalHost().getHostAddress();
-		Thread thread = new Thread(new RegistryZK(addr, appConfiguration.getPort()));
-		thread.setName("registry-zk");
-		//thread.start() ;
-	}
+    @Override
+    public void run(String... args) throws Exception {
+        //获得本机IP
+        String addr = InetAddress.getLocalHost().getHostAddress();
+        Thread thread = new Thread(new RegistryZK(addr, appConfiguration.getPort()));
+        thread.setName("registry-zk");
+        //thread.start() ;
+    }
 }

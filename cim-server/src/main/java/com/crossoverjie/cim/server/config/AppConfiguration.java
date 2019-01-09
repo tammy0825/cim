@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
  * Function:
  *
  * @author crossoverJie
- *         Date: 2018/8/24 01:43
+ * Date: 2018/8/24 01:43
  * @since JDK 1.8
  */
 @Component
@@ -26,7 +26,7 @@ public class AppConfiguration {
     private int cimServerPort;
 
     @Value("${cim.clear.route.request.url}")
-    private String clearRouteUrl ;
+    private String clearRouteUrl;
 
     public String getClearRouteUrl() {
         return clearRouteUrl;

@@ -22,7 +22,7 @@ import java.io.IOException;
  * Function:
  *
  * @author crossoverJie
- *         Date: 17/05/2018 18:52
+ * Date: 17/05/2018 18:52
  * @since JDK 1.8
  */
 @ChannelHandler.Sharable
@@ -31,15 +31,17 @@ public class CIMServerHandle extends SimpleChannelInboundHandler<CIMRequestProto
     private final static Logger LOGGER = LoggerFactory.getLogger(CIMServerHandle.class);
 
     private final MediaType mediaType = MediaType.parse("application/json");
+
     /**
      * 取消绑定
+     *
      * @param ctx
      * @throws Exception
      */
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
         CIMUserInfo userInfo = SessionSocketHolder.getUserId((NioSocketChannel) ctx.channel());
-        LOGGER.info("用户[{}]下线",userInfo.getUserName());
+        LOGGER.info("用户[{}]下线", userInfo.getUserName());
         SessionSocketHolder.remove((NioSocketChannel) ctx.channel());
         SessionSocketHolder.removeSession(userInfo.getUserId());
 
@@ -49,6 +51,7 @@ public class CIMServerHandle extends SimpleChannelInboundHandler<CIMRequestProto
 
     /**
      * 清除路由关系
+     *
      * @param userInfo
      * @throws IOException
      */
@@ -71,7 +74,7 @@ public class CIMServerHandle extends SimpleChannelInboundHandler<CIMRequestProto
             if (!response.isSuccessful()) {
                 throw new IOException("Unexpected code " + response);
             }
-        }finally {
+        } finally {
             response.body().close();
         }
     }
@@ -81,20 +84,19 @@ public class CIMServerHandle extends SimpleChannelInboundHandler<CIMRequestProto
     protected void channelRead0(ChannelHandlerContext ctx, CIMRequestProto.CIMReqProtocol msg) throws Exception {
         LOGGER.info("收到msg={}", msg.toString());
 
-        if (msg.getType() == Constants.CommandType.LOGIN){
+        if (msg.getType() == Constants.CommandType.LOGIN) {
             //保存客户端与 Channel 之间的关系
-            SessionSocketHolder.put(msg.getRequestId(),(NioSocketChannel)ctx.channel()) ;
-            SessionSocketHolder.saveSession(msg.getRequestId(),msg.getReqMsg());
-            LOGGER.info("客户端[{}]上线成功",msg.getReqMsg());
+            SessionSocketHolder.put(msg.getRequestId(), (NioSocketChannel) ctx.channel());
+            SessionSocketHolder.saveSession(msg.getRequestId(), msg.getReqMsg());
+            LOGGER.info("客户端[{}]上线成功", msg.getReqMsg());
         }
 
     }
 
 
-
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
-        if (CIMException.isResetByPeer(cause.getMessage())){
+        if (CIMException.isResetByPeer(cause.getMessage())) {
             return;
         }
 

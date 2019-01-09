@@ -6,7 +6,7 @@ import java.io.Serializable;
  * Function:
  *
  * @author crossoverJie
- *         Date: 2018/12/23 00:43
+ * Date: 2018/12/23 00:43
  * @since JDK 1.8
  */
 public class CIMServerResVO implements Serializable {
@@ -55,12 +55,22 @@ public class CIMServerResVO implements Serializable {
         this.dataBody = dataBody;
     }
 
+    @Override
+    public String toString() {
+        return "CIMServerResVO{" +
+                "code='" + code + '\'' +
+                ", message='" + message + '\'' +
+                ", reqNo=" + reqNo +
+                ", dataBody=" + dataBody +
+                '}';
+    }
+
     public static class ServerInfo {
         /**
          * ip : 127.0.0.1
          * port : 8081
          */
-        private String ip ;
+        private String ip;
         private Integer cimServerPort;
         private Integer httpPort;
 
@@ -96,16 +106,5 @@ public class CIMServerResVO implements Serializable {
                     ", httpPort=" + httpPort +
                     '}';
         }
-    }
-
-
-    @Override
-    public String toString() {
-        return "CIMServerResVO{" +
-                "code='" + code + '\'' +
-                ", message='" + message + '\'' +
-                ", reqNo=" + reqNo +
-                ", dataBody=" + dataBody +
-                '}';
     }
 }

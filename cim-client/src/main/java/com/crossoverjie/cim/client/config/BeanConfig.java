@@ -17,7 +17,7 @@ import java.util.concurrent.*;
  * Function:bean 配置
  *
  * @author crossoverJie
- *         Date: 24/05/2018 15:55
+ * Date: 24/05/2018 15:55
  * @since JDK 1.8
  */
 @Configuration
@@ -38,6 +38,7 @@ public class BeanConfig {
 
     /**
      * 创建心跳单例
+     *
      * @return
      */
     @Bean(value = "heartBeat")
@@ -53,6 +54,7 @@ public class BeanConfig {
 
     /**
      * http client
+     *
      * @return okHttp
      */
     @Bean
@@ -60,7 +62,7 @@ public class BeanConfig {
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
         builder.connectTimeout(30, TimeUnit.SECONDS)
                 .readTimeout(10, TimeUnit.SECONDS)
-                .writeTimeout(10,TimeUnit.SECONDS)
+                .writeTimeout(10, TimeUnit.SECONDS)
                 .retryOnConnectionFailure(true);
         return builder.build();
     }
@@ -68,30 +70,32 @@ public class BeanConfig {
 
     /**
      * 创建回调线程池
+     *
      * @return
      */
     @Bean("callBackThreadPool")
-    public ThreadPoolExecutor buildCallerThread(){
+    public ThreadPoolExecutor buildCallerThread() {
         BlockingQueue<Runnable> queue = new LinkedBlockingQueue(queueSize);
         ThreadFactory product = new ThreadFactoryBuilder()
                 .setNameFormat("msg-callback-%d")
                 .setDaemon(true)
                 .build();
-        ThreadPoolExecutor productExecutor = new ThreadPoolExecutor(poolSize, poolSize, 1, TimeUnit.MILLISECONDS, queue,product);
-        return  productExecutor ;
+        ThreadPoolExecutor productExecutor = new ThreadPoolExecutor(poolSize, poolSize, 1, TimeUnit.MILLISECONDS, queue, product);
+        return productExecutor;
     }
 
     /**
      * 回调 bean
+     *
      * @return
      */
     @Bean
-    public MsgHandleCaller buildCaller(){
+    public MsgHandleCaller buildCaller() {
         MsgHandleCaller caller = new MsgHandleCaller(msg -> {
             //处理业务逻辑，或者自定义实现接口
-        }) ;
+        });
 
-        return caller ;
+        return caller;
     }
 
 }

@@ -28,7 +28,7 @@ import javax.annotation.PostConstruct;
  * Function:
  *
  * @author crossoverJie
- *         Date: 22/05/2018 14:19
+ * Date: 22/05/2018 14:19
  * @since JDK 1.8
  */
 @Component
@@ -147,9 +147,10 @@ public class CIMClient {
 
     /**
      * 关闭
+     *
      * @throws InterruptedException
      */
     public void close() throws InterruptedException {
-        channel.close() ;
+        channel.close();
     }
 }

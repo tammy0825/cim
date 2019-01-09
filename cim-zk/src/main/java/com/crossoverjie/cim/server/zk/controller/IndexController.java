@@ -16,7 +16,7 @@ import java.util.List;
  * Function:
  *
  * @author crossoverJie
- *         Date: 22/05/2018 14:46
+ * Date: 22/05/2018 14:46
  * @since JDK 1.8
  */
 @Controller
@@ -25,41 +25,41 @@ public class IndexController {
 
 
     @Autowired
-    private ServerCache serverCache ;
+    private ServerCache serverCache;
 
     /**
      * 获取所有路由节点
+     *
      * @return
      */
     @ApiOperation("获取所有路由节点")
-    @RequestMapping(value = "getAllRoute",method = RequestMethod.POST)
+    @RequestMapping(value = "getAllRoute", method = RequestMethod.POST)
     @ResponseBody()
-    public BaseResponse<List<String>> getAllRoute(){
+    public BaseResponse<List<String>> getAllRoute() {
         BaseResponse<List<String>> res = new BaseResponse();
         List<String> all = serverCache.getAll();
         res.setDataBody(all);
-        res.setCode(StatusEnum.SUCCESS.getCode()) ;
-        res.setMessage(StatusEnum.SUCCESS.getMessage()) ;
-        return res ;
+        res.setCode(StatusEnum.SUCCESS.getCode());
+        res.setMessage(StatusEnum.SUCCESS.getMessage());
+        return res;
     }
 
     /**
      * 获取所有路由节点
+     *
      * @return
      */
     @ApiOperation("获取所有路由节点")
-    @RequestMapping(value = "getOneOfRoute",method = RequestMethod.POST)
+    @RequestMapping(value = "getOneOfRoute", method = RequestMethod.POST)
     @ResponseBody()
-    public BaseResponse<String> getOneOfRoute(){
+    public BaseResponse<String> getOneOfRoute() {
         BaseResponse<String> res = new BaseResponse();
         String server = serverCache.selectServer();
         res.setDataBody(server);
-        res.setCode(StatusEnum.SUCCESS.getCode()) ;
-        res.setMessage(StatusEnum.SUCCESS.getMessage()) ;
-        return res ;
+        res.setCode(StatusEnum.SUCCESS.getCode());
+        res.setMessage(StatusEnum.SUCCESS.getMessage());
+        return res;
     }
-
-
 
 
 }

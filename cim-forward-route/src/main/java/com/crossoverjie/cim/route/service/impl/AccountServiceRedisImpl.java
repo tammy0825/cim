@@ -32,7 +32,7 @@ import static com.crossoverjie.cim.route.constant.Constant.ROUTE_PREFIX;
  * Function:
  *
  * @author crossoverJie
- *         Date: 2018/12/23 21:58
+ * Date: 2018/12/23 21:58
  * @since JDK 1.8
  */
 @Service
@@ -43,7 +43,7 @@ public class AccountServiceRedisImpl implements AccountService {
     private RedisTemplate<String, String> redisTemplate;
 
     @Autowired
-    private UserInfoCacheService userInfoCacheService ;
+    private UserInfoCacheService userInfoCacheService;
 
     @Autowired
     private OkHttpClient okHttpClient;
@@ -83,7 +83,7 @@ public class AccountServiceRedisImpl implements AccountService {
 
         //登录成功，保存登录状态
         boolean status = userInfoCacheService.saveAndCheckUserLoginStatus(loginReqVO.getUserId());
-        if (status == false){
+        if (status == false) {
             //重复登录
             return false;
         }
@@ -123,8 +123,8 @@ public class AccountServiceRedisImpl implements AccountService {
     public CIMServerResVO loadRouteRelatedByUserId(Long userId) {
         String value = redisTemplate.opsForValue().get(ROUTE_PREFIX + userId);
 
-        if (value == null){
-            throw new CIMException(OFF_LINE) ;
+        if (value == null) {
+            throw new CIMException(OFF_LINE);
         }
 
         String[] server = value.split(":");
@@ -164,7 +164,7 @@ public class AccountServiceRedisImpl implements AccountService {
     @Override
     public void offLine(Long userId) throws Exception {
         //删除路由
-        redisTemplate.delete(ROUTE_PREFIX + userId) ;
+        redisTemplate.delete(ROUTE_PREFIX + userId);
 
         //删除登录状态
         userInfoCacheService.removeLoginStatus(userId);
