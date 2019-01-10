@@ -6,6 +6,7 @@ import com.crossoverjie.cim.common.pojo.CIMUserInfo;
 import com.crossoverjie.cim.common.res.BaseResponse;
 import com.crossoverjie.cim.common.res.NULLBody;
 import com.crossoverjie.cim.route.cache.ServerCache;
+import com.crossoverjie.cim.route.pojo.RegisterInfoResDTO;
 import com.crossoverjie.cim.route.service.AccountService;
 import com.crossoverjie.cim.route.service.UserInfoCacheService;
 import com.crossoverjie.cim.route.vo.req.ChatReqVO;
@@ -145,21 +146,27 @@ public class RouteController {
 
         //登录校验
         boolean login = accountService.login(loginReqVO);
-        if (login) {
-            String server = serverCache.selectServer();
-            String[] serverInfo = server.split(":");
-            CIMServerResVO vo = new CIMServerResVO(serverInfo[0], Integer.parseInt(serverInfo[1]), Integer.parseInt(serverInfo[2]));
+        try {
+            if (login) {
+                String server = serverCache.selectServer();
+                String[] serverInfo = server.split(":");
+                CIMServerResVO vo = new CIMServerResVO(serverInfo[0], Integer.parseInt(serverInfo[1]), Integer.parseInt(serverInfo[2]));
 
-            //保存路由信息
-            accountService.saveRouteInfo(loginReqVO, server);
+                //保存路由信息
+                accountService.saveRouteInfo(loginReqVO, server);
 
-            res.setDataBody(vo);
-            res.setCode(StatusEnum.SUCCESS.getCode());
-            res.setMessage(StatusEnum.SUCCESS.getMessage());
-        } else {
-            res.setCode(StatusEnum.REPEAT_LOGIN.getCode());
-            res.setMessage(StatusEnum.REPEAT_LOGIN.getMessage());
+                res.setDataBody(vo);
+                res.setCode(StatusEnum.SUCCESS.getCode());
+                res.setMessage(StatusEnum.SUCCESS.getMessage());
+            } else {
+                res.setCode(StatusEnum.REPEAT_LOGIN.getCode());
+                res.setMessage(StatusEnum.REPEAT_LOGIN.getMessage());
+            }
+        } catch (CIMException e) {
+            res.setCode(e.getErrorCode());
+            res.setMessage(e.getErrorMessage());
         }
+
 
         return res;
     }
@@ -176,12 +183,47 @@ public class RouteController {
         BaseResponse<RegisterInfoResVO> res = new BaseResponse();
 
         long userId = System.currentTimeMillis();
-        RegisterInfoResVO info = new RegisterInfoResVO(userId, registerInfoReqVO.getUserName());
-        info = accountService.register(info);
+        RegisterInfoResDTO info = new RegisterInfoResDTO(userId, registerInfoReqVO.getUserName(), registerInfoReqVO.getPassword());
 
-        res.setDataBody(info);
-        res.setCode(StatusEnum.SUCCESS.getCode());
-        res.setMessage(StatusEnum.SUCCESS.getMessage());
+        try {
+            RegisterInfoResVO resInfo = accountService.register(info);
+            res.setDataBody(resInfo);
+            res.setCode(StatusEnum.SUCCESS.getCode());
+            res.setMessage(StatusEnum.SUCCESS.getMessage());
+
+        } catch (CIMException e) {
+            res.setCode(e.getErrorCode());
+            res.setMessage(e.getErrorMessage());
+        }
+
+        return res;
+    }
+
+    /**
+     * 注册账号
+     *
+     * @return
+     */
+    @ApiOperation("注册账号")
+    @RequestMapping(value = "registerAccountUniqueName", method = RequestMethod.POST)
+    @ResponseBody()
+    public BaseResponse<RegisterInfoResVO> registerAccountUniqueName(@RequestBody RegisterInfoReqVO registerInfoReqVO) throws Exception {
+        BaseResponse<RegisterInfoResVO> res = new BaseResponse();
+
+        long userId = System.currentTimeMillis();
+        RegisterInfoResDTO info = new RegisterInfoResDTO(userId, registerInfoReqVO.getUserName(), registerInfoReqVO.getPassword());
+
+        try {
+            RegisterInfoResVO resInfo = accountService.registerUniqueName(info);
+            res.setDataBody(resInfo);
+            res.setCode(StatusEnum.SUCCESS.getCode());
+            res.setMessage(StatusEnum.SUCCESS.getMessage());
+
+        } catch (CIMException e) {
+            res.setCode(e.getErrorCode());
+            res.setMessage(e.getErrorMessage());
+        }
+
         return res;
     }
 

@@ -1,5 +1,6 @@
 package com.crossoverjie.cim.route.service;
 
+import com.crossoverjie.cim.route.pojo.RegisterInfoResDTO;
 import com.crossoverjie.cim.route.vo.req.ChatReqVO;
 import com.crossoverjie.cim.route.vo.req.LoginReqVO;
 import com.crossoverjie.cim.route.vo.res.CIMServerResVO;
@@ -23,7 +24,16 @@ public interface AccountService {
      * @return
      * @throws Exception
      */
-    RegisterInfoResVO register(RegisterInfoResVO info) throws Exception;
+    RegisterInfoResVO register(RegisterInfoResDTO info) throws Exception;
+
+    /**
+     * 注册用户 用户名唯一
+     *
+     * @param info 用户信息
+     * @return
+     * @throws Exception
+     */
+    RegisterInfoResVO registerUniqueName(RegisterInfoResDTO info) throws Exception;
 
     /**
      * 登录服务

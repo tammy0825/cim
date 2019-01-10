@@ -18,6 +18,10 @@ public class RegisterInfoReqVO extends BaseRequest {
     @ApiModelProperty(required = true, value = "userName", example = "zhangsan")
     private String userName;
 
+    @NotNull(message = "密码不能为空")
+    @ApiModelProperty(required = true, value = "password")
+    private String password;
+
     public String getUserName() {
         return userName;
     }
@@ -26,10 +30,19 @@ public class RegisterInfoReqVO extends BaseRequest {
         this.userName = userName;
     }
 
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     @Override
     public String toString() {
         return "RegisterInfoReqVO{" +
                 "userName='" + userName + '\'' +
-                "} " + super.toString();
+                ", password='" + password + '\'' +
+                '}';
     }
 }

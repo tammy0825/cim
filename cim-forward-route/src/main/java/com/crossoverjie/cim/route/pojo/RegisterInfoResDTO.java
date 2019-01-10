@@ -1,4 +1,4 @@
-package com.crossoverjie.cim.route.vo.res;
+package com.crossoverjie.cim.route.pojo;
 
 import java.io.Serializable;
 
@@ -9,13 +9,15 @@ import java.io.Serializable;
  * Date: 2018/12/23 21:54
  * @since JDK 1.8
  */
-public class RegisterInfoResVO implements Serializable {
+public class RegisterInfoResDTO implements Serializable {
     private Long userId;
     private String userName;
+    private String password;
 
-    public RegisterInfoResVO(Long userId, String userName) {
+    public RegisterInfoResDTO(Long userId, String userName, String password) {
         this.userId = userId;
         this.userName = userName;
+        this.password = password;
     }
 
     public Long getUserId() {
@@ -34,11 +36,20 @@ public class RegisterInfoResVO implements Serializable {
         this.userName = userName;
     }
 
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     @Override
     public String toString() {
-        return "RegisterInfoResVO{" +
+        return "RegisterInfoResDTO{" +
                 "userId=" + userId +
                 ", userName='" + userName + '\'' +
+                ", password='" + password + '\'' +
                 '}';
     }
 }

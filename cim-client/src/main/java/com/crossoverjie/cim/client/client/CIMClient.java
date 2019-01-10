@@ -44,6 +44,9 @@ public class CIMClient {
     @Value("${cim.user.userName}")
     private String userName;
 
+    @Value("${cim.user.password}")
+    private String password;
+
     private SocketChannel channel;
 
     @Autowired
@@ -91,7 +94,7 @@ public class CIMClient {
      * @throws Exception
      */
     private CIMServerResVO.ServerInfo userLogin() throws Exception {
-        LoginReqVO loginReqVO = new LoginReqVO(userId, userName);
+        LoginReqVO loginReqVO = new LoginReqVO(userId, userName, password);
         CIMServerResVO.ServerInfo cimServer = routeRequest.getCIMServer(loginReqVO);
         LOGGER.info("cimServer=[{}]", cimServer.toString());
         return cimServer;

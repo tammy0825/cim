@@ -3,6 +3,7 @@ package com.crossoverjie.cim.route.service.impl;
 import com.alibaba.fastjson.JSONObject;
 import com.crossoverjie.cim.common.exception.CIMException;
 import com.crossoverjie.cim.common.pojo.CIMUserInfo;
+import com.crossoverjie.cim.route.pojo.RegisterInfoResDTO;
 import com.crossoverjie.cim.route.service.AccountService;
 import com.crossoverjie.cim.route.service.UserInfoCacheService;
 import com.crossoverjie.cim.route.vo.req.ChatReqVO;
@@ -24,9 +25,9 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.crossoverjie.cim.common.enums.StatusEnum.OFF_LINE;
-import static com.crossoverjie.cim.route.constant.Constant.ACCOUNT_PREFIX;
-import static com.crossoverjie.cim.route.constant.Constant.ROUTE_PREFIX;
+import static com.crossoverjie.cim.common.constant.CIMUserInfoConstant.USERNAME;
+import static com.crossoverjie.cim.common.enums.StatusEnum.*;
+import static com.crossoverjie.cim.route.constant.Constant.*;
 
 /**
  * Function:
@@ -51,28 +52,75 @@ public class AccountServiceRedisImpl implements AccountService {
     private MediaType mediaType = MediaType.parse("application/json");
 
     @Override
-    public RegisterInfoResVO register(RegisterInfoResVO info) {
+    public RegisterInfoResVO register(RegisterInfoResDTO info) {
+        RegisterInfoResVO infoRes = null;
         String key = ACCOUNT_PREFIX + info.getUserId();
 
-        String name = redisTemplate.opsForValue().get(info.getUserName());
-        if (null == name) {
-            //为了方便查询，冗余一份
-            redisTemplate.opsForValue().set(key, info.getUserName());
-            redisTemplate.opsForValue().set(info.getUserName(), key);
+        // 判断userId是否存在
+        boolean hasAccount = redisTemplate.hasKey(key);
+
+        if (hasAccount) {
+            // 用户id已存在
+            throw new CIMException(REGISTER_FAIL);
         } else {
-            long userId = Long.parseLong(name.split(":")[1]);
-            info.setUserId(userId);
-            info.setUserName(info.getUserName());
+            String password = PASSWORD_PREFIX + info.getUserId();
+            // 保存密码
+            redisTemplate.opsForValue().set(password, info.getPassword());
+            // 保存用户信息
+            redisTemplate.opsForHash().put(key, USERNAME, info.getUserName());
+
+            infoRes = new RegisterInfoResVO(info.getUserId(), info.getUserName());
         }
 
-        return info;
+
+        return infoRes;
+    }
+
+    @Override
+    public RegisterInfoResVO registerUniqueName(RegisterInfoResDTO info) {
+        RegisterInfoResVO infoRes = null;
+        String account = ACCOUNT_PREFIX + info.getUserId();
+
+        // 判断用户id是否已存在
+        boolean hasAccount = redisTemplate.hasKey(account);
+        boolean hasUsername = redisTemplate.opsForHash().hasKey(USERNAME_MAP, info.getUserName());
+
+        if (hasAccount) {
+            // 用户id已存在
+            throw new CIMException(REGISTER_FAIL);
+        } else {
+            if (hasUsername) {
+                // 用户名已存在
+                throw new CIMException(REPEAT_USERNAME);
+            } else {
+                String password = PASSWORD_PREFIX + info.getUserId();
+                // 保存密码
+                redisTemplate.opsForValue().set(password, info.getPassword());
+                // 保存用户信息
+                redisTemplate.opsForHash().put(account, USERNAME, info.getUserName());
+                // 保存用户名与用户id对应关系，确保用户名唯一
+                redisTemplate.opsForHash().put(USERNAME_MAP, info.getUserName(), info.getUserId().toString());
+
+                infoRes = new RegisterInfoResVO(info.getUserId(), info.getUserName());
+            }
+        }
+
+
+        return infoRes;
     }
 
     @Override
     public boolean login(LoginReqVO loginReqVO) throws Exception {
         //再去Redis里查询
         String key = ACCOUNT_PREFIX + loginReqVO.getUserId();
-        String userName = redisTemplate.opsForValue().get(key);
+        String userName = redisTemplate.opsForHash().get(key, USERNAME).toString();
+
+        boolean hasAccount = redisTemplate.hasKey(key);
+
+        if (!hasAccount) {
+            throw new CIMException(NOT_REGISTER);
+        }
+
         if (null == userName) {
             return false;
         }

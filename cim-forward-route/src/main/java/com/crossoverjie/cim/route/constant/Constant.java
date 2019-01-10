@@ -11,9 +11,19 @@ public final class Constant {
 
 
     /**
-     * 账号前缀
+     * 账号前缀 用户信息
      */
     public final static String ACCOUNT_PREFIX = "cim-account:";
+
+    /**
+     * 密码前缀 string
+     */
+    public static final String PASSWORD_PREFIX = "cim-password:";
+
+    /**
+     * 用户名 map
+     */
+    public static final String USERNAME_MAP = "cim_username";
 
     /**
      * 路由信息前缀

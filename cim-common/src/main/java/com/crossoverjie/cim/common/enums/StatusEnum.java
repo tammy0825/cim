@@ -8,15 +8,18 @@ public enum StatusEnum {
     /**
      * 成功
      */
-    SUCCESS("9000", "成功"),
+    SUCCESS("0000", "成功"),
+
     /**
      * 成功
      */
-    FALLBACK("8000", "FALL_BACK"),
+    FALLBACK("2000", "FALL_BACK"),
+
     /**
      * 参数校验失败
      **/
     VALIDATION_FAIL("3000", "参数校验失败"),
+
     /**
      * 失败
      */
@@ -28,14 +31,30 @@ public enum StatusEnum {
     REPEAT_LOGIN("5000", "账号重复登录，请退出一个账号！"),
 
     /**
-     * 账号不在线
+     * 用户尚未注册
      */
-    OFF_LINE("7000", "你选择的账号不在线，请重新选择！"),
+    NOT_REGISTER("5001", "用户尚未注册"),
+
+    /**
+     * 注册失败
+     */
+    REGISTER_FAIL("6000", "注册失败"),
+
+    /**
+     * 用户名重复
+     */
+    REPEAT_USERNAME("6001", "用户名重复，请重新注册"),
 
     /**
      * 请求限流
      */
-    REQUEST_LIMIT("6000", "请求限流"),
+    REQUEST_LIMIT("7000", "请求限流"),
+
+    /**
+     * 账号不在线
+     */
+    OFF_LINE("8000", "你选择的账号不在线，请重新选择！"),
+
     ;
 
 

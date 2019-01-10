@@ -106,7 +106,11 @@ public class RouteRequestImpl implements RouteRequest {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("userId", loginReqVO.getUserId());
         jsonObject.put("userName", loginReqVO.getUserName());
-        RequestBody requestBody = RequestBody.create(mediaType, jsonObject.toString());
+        jsonObject.put("password", loginReqVO.getPassword());
+
+        String reqJson = JSON.toJSONString(loginReqVO);
+
+        RequestBody requestBody = RequestBody.create(mediaType, reqJson);
 
         Request request = new Request.Builder()
                 .url(serverRouteRequestUrl)

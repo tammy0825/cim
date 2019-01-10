@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+import static com.crossoverjie.cim.common.constant.CIMUserInfoConstant.USERNAME;
 import static com.crossoverjie.cim.route.constant.Constant.ACCOUNT_PREFIX;
 import static com.crossoverjie.cim.route.constant.Constant.LOGIN_STATUS_PREFIX;
 
@@ -42,7 +43,8 @@ public class UserInfoCacheServiceImpl implements UserInfoCacheService {
         }
 
         //load redis
-        String sendUserName = redisTemplate.opsForValue().get(ACCOUNT_PREFIX + userId);
+//        String sendUserName = redisTemplate.opsForValue().get(ACCOUNT_PREFIX + userId);
+        String sendUserName = redisTemplate.opsForHash().get(ACCOUNT_PREFIX + userId, USERNAME).toString();
         if (sendUserName != null) {
             cimUserInfo = new CIMUserInfo(userId, sendUserName);
             USER_INFO_MAP.put(userId, cimUserInfo);
